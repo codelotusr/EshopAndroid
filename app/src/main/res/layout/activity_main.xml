@@ -7,7 +7,7 @@
     tools:context=".MainActivity">
 
     <EditText
-        android:id="@+id/editTextTextPassword"
+        android:id="@+id/passwordField"
         android:layout_width="266dp"
         android:layout_height="54dp"
         android:layout_marginTop="8dp"
@@ -17,10 +17,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText" />
+        app:layout_constraintTop_toBottomOf="@+id/usernameField" />
 
     <EditText
-        android:id="@+id/editTextText"
+        android:id="@+id/usernameField"
         android:layout_width="263dp"
         android:layout_height="49dp"
         android:layout_marginTop="92dp"
@@ -33,7 +33,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/loginButton"
         android:layout_width="247dp"
         android:layout_height="79dp"
         android:layout_marginBottom="236dp"
