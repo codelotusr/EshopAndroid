@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
         jsonObject.addProperty("password", password.getText().toString());
 
         String info = gson.toJson(jsonObject);
-        System.out.println(info);
 
         Executor executor = Executors.newSingleThreadExecutor();
         Handler handler = new Handler(getMainLooper());
@@ -49,10 +48,10 @@ public class MainActivity extends AppCompatActivity {
                 String response = Rest.sendPost(VALIDATE_USER_URL, info);
                 handler.post(() -> {
                    try {
-                       if (!response.equals("Error") && !response.equals("false")) {
+                       if (!response.equals("Error")) {
                            Intent intent = new Intent(MainActivity.this, ProductsActivity.class);
+                           intent.putExtra("user", response);
                            startActivity(intent);
-                       } else {
                        }
                    } catch (Exception e) {
                        e.printStackTrace();
