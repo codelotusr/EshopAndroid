@@ -12,41 +12,44 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public class Rest {
-    private static BufferedWriter bufferedWriter;
-    private static OutputStream outputStream;
 
     public static String sendPost(String postUrl, String jsonInfo) throws IOException {
-        URL url = new URL(postUrl);
-        HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-        httpURLConnection.setRequestMethod("POST");
-        httpURLConnection.setConnectTimeout(20000);
-        httpURLConnection.setReadTimeout(20000);
-        httpURLConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-        httpURLConnection.setRequestProperty("Accept", "application/json");
-        httpURLConnection.setDoOutput(true);
-        httpURLConnection.setDoInput(true);
-        outputStream = httpURLConnection.getOutputStream();
-        bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
-        bufferedWriter.write(jsonInfo);
-        bufferedWriter.flush();
-        bufferedWriter.close();
-        outputStream.close();
+        HttpURLConnection httpURLConnection = null;
+        try {
+            URL url = new URL(postUrl);
+            httpURLConnection = (HttpURLConnection) url.openConnection();
+            httpURLConnection.setRequestMethod("POST");
+            httpURLConnection.setConnectTimeout(20000);
+            httpURLConnection.setReadTimeout(20000);
+            httpURLConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            httpURLConnection.setRequestProperty("Accept", "application/json");
+            httpURLConnection.setDoOutput(true);
+            httpURLConnection.setDoInput(true);
 
-        int responseCode = httpURLConnection.getResponseCode();
-        System.out.println("Response code: " + responseCode);
-        if (responseCode == HttpURLConnection.HTTP_OK) {
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
-            String line;
-            StringBuffer response = new StringBuffer();
-            while ((line = bufferedReader.readLine()) != null) {
-                response.append(line);
+            try (OutputStream outputStream = httpURLConnection.getOutputStream();
+                 BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8))) {
+                bufferedWriter.write(jsonInfo);
             }
 
-            bufferedReader.close();
+            int responseCode = httpURLConnection.getResponseCode();
 
-            return response.toString();
-        } else {
-            return "Error";
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()))) {
+                    StringBuilder response = new StringBuilder();
+                    String line;
+                    while ((line = bufferedReader.readLine()) != null) {
+                        response.append(line);
+                    }
+                    return response.toString();
+                }
+            } else {
+                return "Error: " + responseCode;
+            }
+        } finally {
+            if (httpURLConnection != null) {
+                httpURLConnection.disconnect();
+            }
         }
     }
 }
+
