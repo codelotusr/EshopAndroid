@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.coursework.eshop.helpers.Rest;
+import com.coursework.eshop.model.User;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -48,10 +49,11 @@ public class MainActivity extends AppCompatActivity {
                 String response = Rest.sendPost(VALIDATE_USER_URL, info);
                 handler.post(() -> {
                    try {
-                       if (!response.equals("Error")) {
-                           Intent intent = new Intent(MainActivity.this, ProductsActivity.class);
-                           intent.putExtra("user", response);
-                           startActivity(intent);
+                       if (!response.equals("Error") && !response.equals("Error: 404")) {
+
+                               Intent intent = new Intent(MainActivity.this, ProductsActivity.class);
+                               intent.putExtra("user", response);
+                               startActivity(intent);
                        }
                    } catch (Exception e) {
                        e.printStackTrace();

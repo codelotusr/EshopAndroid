@@ -3,4 +3,6 @@
     <string name="login_field">Enter Username:</string>
     <string name="password_field">Password:</string>
     <string name="login_button">Login</string>
+    <string name="account_button">Account</string>
+    <string name="cart_button">Cart</string>
 </resources>
